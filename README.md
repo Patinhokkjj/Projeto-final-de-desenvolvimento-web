@@ -1,6 +1,6 @@
 # 🛒 Nome da Loja
 
-Projeto Final desenvolvido por **[Seu Nome]**, aluno(a) do curso de **[Seu Curso]**, na disciplina **[Nome da Disciplina]**.
+Projeto Final desenvolvido por **mim**, aluno(a) do curso de **ADS**, na disciplina **DESENVOLVIMENTO DE APLICAÇÕES PARA INTERNET**.
 
 ---
 
