@@ -6,7 +6,7 @@ Projeto Final desenvolvido por **mim**, aluno(a) do curso de **ADS**, na discipl
 
 ## 📖 Sobre o projeto
 
-Este projeto é uma **loja virtual** de **[roupas / eletrônicos / mercado]**, criada para praticar o desenvolvimento web completo, do visual do site até o armazenamento dos dados em um banco de dados.
+Este projeto é uma **loja virtual** de **mercado**, criada para praticar o desenvolvimento web completo, do visual do site até o armazenamento dos dados em um banco de dados.
 
 A ideia é que o cliente possa se cadastrar, escolher produtos, colocá-los no carrinho, calcular o frete pelo CEP e finalizar a compra. Também haverá uma área para cadastrar os produtos que ficam à venda.
 
@@ -56,8 +56,8 @@ O banco de dados terá, no mínimo, as três tabelas exigidas pela atividade, al
 
 ## 👤 Autor
 
-**[Seu Nome]**
-GitHub: [@seu-usuario](https://github.com/seu-usuario)
+**Iarlley**
+GitHub: @Patinhokkjj(https://github.com/Patinhokkjj)
 
 ---
 
