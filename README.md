@@ -57,7 +57,7 @@ O banco de dados terá, no mínimo, as três tabelas exigidas pela atividade, al
 ## 👤 Autor
 
 **Iarlley**
-GitHub: @Patinhokkjj(https://github.com/Patinhokkjj)
+/ GitHub: @Patinhokkjj(https://github.com/Patinhokkjj)
 
 ---
 
