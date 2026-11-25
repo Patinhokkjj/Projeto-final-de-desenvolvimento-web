@@ -1,0 +1,240 @@
+:root {
+  --verde: #2e7f63;
+  --verde-claro: #2f5a40;
+  --ouro: #c9962b;
+  --ouro-claro: #e7c873;
+  --vinho: #024b31;
+  --pergaminho: #f3ead3;
+  --papel: #fbf6e8;
+  --tinta: #2b2218;
+}
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Lora", Georgia, serif;
+  color: var(--tinta);
+  background: var(--pergaminho);
+  background-image: radial-gradient(
+    rgba(139, 46, 46, 0.05) 1px,
+    transparent 1px
+  );
+  background-size: 18px 18px;
+  line-height: 1.5;
+}
+h1,
+h2,
+h3,
+.marca {
+  font-family: "Cinzel", Georgia, serif;
+}
+
+/* ---------- topo ---------- */
+.topo {
+  background: var(--verde);
+  border-bottom: 5px solid var(--ouro);
+}
+.topo-conteudo {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 12px 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.marca {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+.marca img {
+  height: 62px;
+}
+.marca strong {
+  display: block;
+  color: var(--ouro-claro);
+  font-size: 1.5rem;
+  letter-spacing: 0.04em;
+  line-height: 1.1;
+}
+.marca small {
+  color: #cfd9c6;
+  font-family: "Lora", serif;
+  font-style: italic;
+}
+nav a {
+  color: var(--pergaminho);
+  text-decoration: none;
+  font-family: "Cinzel", serif;
+  font-weight: 700;
+  margin-left: 18px;
+  padding: 4px 0;
+  border-bottom: 2px solid transparent;
+}
+nav a:hover,
+nav a.ativo {
+  border-color: var(--ouro);
+  color: var(--ouro-claro);
+}
+
+/* ---------- conteúdo ---------- */
+main {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 28px 20px 50px;
+}
+h1 {
+  color: var(--verde);
+  font-size: 1.9rem;
+  margin: 30px 0 14px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--ouro);
+}
+h2 {
+  color: var(--vinho);
+  margin-top: 30px;
+}
+.faixa {
+  background: var(--verde);
+  color: var(--pergaminho);
+  text-align: center;
+  border: 3px double var(--ouro);
+  border-radius: 10px;
+  padding: 22px 16px;
+}
+.faixa h2 {
+  color: var(--ouro-claro);
+  margin: 0 0 6px;
+  font-size: 1.6rem;
+}
+.faixa p {
+  margin: 0;
+  font-style: italic;
+}
+
+/* ---------- produtos ---------- */
+#produtos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+}
+.produto {
+  background: var(--papel);
+  border: 2px solid var(--ouro);
+  border-radius: 10px;
+  padding: 16px;
+  text-align: center;
+  box-shadow: 0 3px 0 var(--ouro);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.produto .icone {
+  font-size: 2.6rem;
+  line-height: 1;
+}
+.produto h3 {
+  margin: 0;
+  font-size: 1.05rem;
+  color: var(--verde);
+}
+.produto .preco {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--vinho);
+}
+.produto small {
+  color: #7a6a55;
+}
+
+/* ---------- formulários e botões ---------- */
+form {
+  background: var(--papel);
+  border: 2px solid var(--ouro);
+  border-radius: 10px;
+  padding: 18px;
+  max-width: 440px;
+  margin-bottom: 20px;
+}
+label {
+  font-weight: 700;
+  color: var(--verde);
+}
+input,
+select {
+  width: 100%;
+  padding: 10px;
+  margin: 4px 0 10px;
+  font: inherit;
+  border: 1.5px solid #cdb98a;
+  border-radius: 6px;
+  background: #fff;
+}
+input:focus,
+select:focus,
+button:focus-visible {
+  outline: 3px solid var(--ouro-claro);
+  outline-offset: 1px;
+}
+input[readonly] {
+  background: #efe6cc;
+}
+button {
+  font-family: "Cinzel", serif;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  background: var(--vinho);
+  color: var(--pergaminho);
+  border: 2px solid #5f1d1d;
+  padding: 10px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+button:hover {
+  background: #a03737;
+}
+form button {
+  width: 100%;
+}
+.produto button {
+  width: 100%;
+}
+
+/* ---------- tabelas ---------- */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--papel);
+  border: 2px solid var(--ouro);
+}
+th {
+  background: var(--verde);
+  color: var(--ouro-claro);
+  font-family: "Cinzel", serif;
+}
+th,
+td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #e0d2a8;
+}
+.resumo p {
+  margin: 4px 0;
+}
+.total {
+  font-size: 1.3rem;
+  color: var(--vinho);
+}
+.rodape {
+  text-align: center;
+  padding: 22px;
+  background: var(--verde);
+  color: #cfd9c6;
+  border-top: 5px solid var(--ouro);
+  font-style: italic;
+}

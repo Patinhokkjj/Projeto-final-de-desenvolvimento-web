@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mercado de Hylian - Compras</title>
+    <link rel="icon" href="logo.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Lora:ital@0;1&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="topo">
+      <div class="topo-conteudo">
+        <a class="marca" href="index.html">
+          <img src="logo.png" alt="Logo do Mercado de Hylian" />
+          <span
+            ><strong>Mercado de Hylian</strong
+            ><small>Tudo fresco para a sua jornada</small></span
+          >
+        </a>
+        <nav>
+          <a href="index.html">Loja</a>
+          <a href="cadastros.html">Cadastros</a>
+          <a href="compras.html" class="ativo">Compras</a>
+        </nav>
+      </div>
+    </header>
+    <main>
+      <h1>Compras realizadas</h1>
+      <table id="lista"></table>
+    </main>
+    <footer class="rodape">
+      Mercado de Hylian · Aberto todos os dias, do amanhecer ao pôr do sol
+    </footer>
+
+    <script>
+      fetch("compras.php")
+        .then((r) => r.json())
+        .then((lista) => {
+          document.getElementById("lista").innerHTML =
+            "<tr><th>Nº</th><th>Cliente</th><th>Data</th><th>Subtotal</th><th>Frete</th><th>Total</th></tr>" +
+            lista
+              .map(
+                (c) => `<tr><td>${c.id}</td><td>${c.nome}</td><td>${c.data}</td>
+      <td>R$ ${c.subtotal}</td><td>R$ ${c.frete}</td><td>R$ ${c.total}</td></tr>`,
+              )
+              .join("");
+        });
+    </script>
+  </body>
+</html>

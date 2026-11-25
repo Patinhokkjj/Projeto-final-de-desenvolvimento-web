@@ -1,11 +1,258 @@
 <!doctype html>
-<html lang="en">
+<html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mercado de Hylian - Loja</title>
+    <link rel="icon" href="logo.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Lora:ital@0;1&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <h1>Olá mundo!</h1>
+    <header class="topo">
+      <div class="topo-conteudo">
+        <a class="marca" href="index.html">
+          <img src="logo.png" alt="Logo do Mercado de Hylian" />
+          <span
+            ><strong>Mercado de Hylian</strong
+            ><small>Tudo no conforto da sua casa</small></span
+          >
+        </a>
+        <nav>
+          <a href="index.html" class="ativo">Loja</a>
+          <a href="cadastros.html">Cadastros</a>
+          <a href="compras.html">Compras</a>
+        </nav>
+      </div>
+    </header>
+    <main>
+      <div class="faixa">
+        <h2>Bem-vindo!</h2>
+        <p>Frutas, comidas, grãos e mantimentos ao seu dispor!</p>
+      </div>
+
+      <h1>Produtos</h1>
+      <div id="produtos"></div>
+
+      <h1>Carrinho</h1>
+      <table id="carrinho"></table>
+
+      <h1>Entrega</h1>
+      <form onsubmit="return false;">
+        <label>Cliente</label>
+        <select id="cliente"></select>
+        <label>CEP</label>
+        <input id="cep" maxlength="9" placeholder="00000-000" />
+        <p id="endereco"></p>
+        <div class="resumo">
+          <p>Subtotal: R$ <span id="subtotal">0.00</span></p>
+          <p>Frete: R$ <span id="frete">0.00</span></p>
+          <p class="total">
+            <b>Total: R$ <span id="total">0.00</span></b>
+          </p>
+        </div>
+        <button onclick="finalizar()">Finalizar compra</button>
+      </form>
+    </main>
+    <footer class="rodape">
+      Mercado de Hylian · Aberto todos os dias, do amanhecer ao pôr do sol
+    </footer>
+
+    <script>
+      let produtos = [];
+      let carrinho = {}; // { idProduto: quantidade }
+      let frete = 0;
+
+      // um ícone para cada tipo de produto (só enfeite)
+      const icones = {
+        arroz: "🍚",
+        feij: "🍲",
+        leite: "🥛",
+        café: "☕",
+        cafe: "☕",
+        banana: "🍌",
+        açaí: "🍇",
+        acai: "🍇",
+        maçã: "🍎",
+        maca: "🍎",
+        pão: "🍞",
+        carne: "🥩",
+        peixe: "🐟",
+        ovo: "🥚",
+        queijo: "🧀",
+        tomate: "🍅",
+        cenoura: "🥕",
+        milho: "🌽",
+      };
+      function icone(nome) {
+        nome = nome.toLowerCase();
+        for (const k in icones) if (nome.includes(k)) return icones[k];
+        return "🛒";
+      }
+
+      // carrega produtos
+      fetch("produtos.php")
+        .then((r) => r.json())
+        .then((lista) => {
+          produtos = lista;
+          mostrarProdutos();
+        });
+
+      // desenha os cartões; o estoque mostrado já desconta o que está no carrinho
+      function mostrarProdutos() {
+        document.getElementById("produtos").innerHTML = produtos
+          .map((p) => {
+            const restante = p.estoque - (carrinho[p.id] || 0);
+            return `
+    <div class="produto">
+      <div class="icone">${icone(p.nome)}</div>
+      <h3>${p.nome}</h3>
+      <div class="preco">R$ ${p.preco}</div>
+      <small>${restante > 0 ? "Disponível: " + restante : "Esgotado"}</small>
+      <button onclick="adicionar(${p.id})" ${restante <= 0 ? "disabled" : ""}>
+        ${restante > 0 ? "Adicionar" : "Sem estoque"}
+      </button>
+    </div>`;
+          })
+          .join("");
+      }
+
+      fetch("clientes.php")
+        .then((r) => r.json())
+        .then((lista) => {
+          document.getElementById("cliente").innerHTML = lista
+            .map(
+              (c) =>
+                `<option value="${c.id}" data-cep="${c.cep}">${c.nome}</option>`,
+            )
+            .join("");
+          usarCepDoCliente();
+        });
+
+      // não deixa passar do estoque
+      function adicionar(id) {
+        const p = produtos.find((x) => x.id == id);
+        const noCarrinho = carrinho[id] || 0;
+        if (noCarrinho + 1 > p.estoque) {
+          alert(
+            "Só temos " +
+              p.estoque +
+              " unidade(s) de " +
+              p.nome +
+              " em estoque.",
+          );
+          return;
+        }
+        carrinho[id] = noCarrinho + 1;
+        desenhar();
+      }
+
+      function diminuir(id) {
+        carrinho[id]--;
+        if (carrinho[id] <= 0) delete carrinho[id];
+        desenhar();
+      }
+      function remover(id) {
+        delete carrinho[id];
+        desenhar();
+      }
+
+      function desenhar() {
+        let subtotal = 0;
+        let html =
+          "<tr><th>Produto</th><th>Qtd</th><th>Total</th><th></th></tr>";
+        for (const id in carrinho) {
+          const p = produtos.find((x) => x.id == id);
+          const total = p.preco * carrinho[id];
+          subtotal += total;
+          html += `<tr><td>${p.nome}</td>
+             <td><button onclick="diminuir(${id})">−</button> ${carrinho[id]}
+                 <button onclick="adicionar(${id})" ${carrinho[id] >= p.estoque ? "disabled" : ""}>+</button></td>
+             <td>R$ ${total.toFixed(2)}</td>
+             <td><button onclick="remover(${id})">X</button></td></tr>`;
+        }
+        document.getElementById("carrinho").innerHTML = html;
+
+        if (subtotal >= 200) frete = 0; // frete grátis
+        document.getElementById("subtotal").textContent = subtotal.toFixed(2);
+        document.getElementById("frete").textContent = frete.toFixed(2);
+        document.getElementById("total").textContent = (
+          subtotal + frete
+        ).toFixed(2);
+        mostrarProdutos();
+      }
+
+      // busca de CEP no ViaCEP e cálculo do frete
+      function buscarCep() {
+        const cep = document.getElementById("cep").value.replace(/\D/g, "");
+        if (cep.length != 8) return;
+
+        fetch(`https://viacep.com.br/ws/${cep}/json/`)
+          .then((r) => r.json())
+          .then((d) => {
+            if (d.erro) {
+              document.getElementById("endereco").textContent =
+                "CEP não encontrado";
+              return;
+            }
+            document.getElementById("endereco").textContent =
+              `${d.logradouro}, ${d.bairro} - ${d.localidade}/${d.uf}`;
+            frete = d.uf == "PA" ? 10 : 30; // Pará R$ 10, outros estados R$ 30
+            desenhar();
+          });
+      }
+
+      function usarCepDoCliente() {
+        const op = document.getElementById("cliente").selectedOptions[0];
+        if (op) {
+          document.getElementById("cep").value = op.dataset.cep;
+          buscarCep();
+        }
+      }
+
+      document.getElementById("cep").addEventListener("input", buscarCep);
+      document
+        .getElementById("cliente")
+        .addEventListener("change", usarCepDoCliente);
+
+      function finalizar() {
+        const itens = Object.keys(carrinho).map((id) => ({
+          id: id,
+          qtd: carrinho[id],
+        }));
+        if (itens.length == 0) return alert("O carrinho está vazio.");
+
+        // confere o estoque antes de enviar
+        for (const item of itens) {
+          const p = produtos.find((x) => x.id == item.id);
+          if (item.qtd > p.estoque)
+            return alert("Estoque insuficiente de " + p.nome + ".");
+        }
+        if (
+          frete == 0 &&
+          Number(document.getElementById("subtotal").textContent) < 200
+        )
+          return alert("Informe um CEP válido para calcular o frete.");
+
+        fetch("compras.php", {
+          method: "POST",
+          body: JSON.stringify({
+            cliente_id: document.getElementById("cliente").value,
+            cep: document.getElementById("cep").value,
+            itens: itens,
+          }),
+        })
+          .then((r) => r.json())
+          .then((r) => {
+            if (r.erro) return alert(r.erro); // ex.: alguém comprou antes
+            alert("Compra #" + r.compra + " finalizada! Total: R$ " + r.total);
+            location.href = "compras.html";
+          });
+      }
+    </script>
   </body>
 </html>

@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mercado de Hylian - Cadastros</title>
+    <link rel="icon" href="logo.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Lora:ital@0;1&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="topo">
+      <div class="topo-conteudo">
+        <a class="marca" href="index.html">
+          <img src="logo.png" alt="Logo do Mercado de Hylian" />
+          <span
+            ><strong>Mercado de Hylian</strong
+            ><small>Tudo fresco para a sua jornada</small></span
+          >
+        </a>
+        <nav>
+          <a href="index.html">Loja</a>
+          <a href="cadastros.html" class="ativo">Cadastros</a>
+          <a href="compras.html">Compras</a>
+        </nav>
+      </div>
+    </header>
+    <main>
+      <h1>Cadastrar cliente</h1>
+      <form id="formCliente">
+        <input name="nome" placeholder="Nome" required />
+        <input name="email" type="email" placeholder="E-mail" required />
+        <input name="cpf" placeholder="CPF" required />
+        <input name="cep" id="cep" placeholder="CEP" maxlength="9" required />
+        <input
+          name="endereco"
+          id="endereco"
+          placeholder="Endereço (preenchido pelo CEP)"
+          readonly
+        />
+        <button>Salvar cliente</button>
+      </form>
+
+      <h2>Clientes</h2>
+      <table id="listaClientes"></table>
+
+      <h1>Cadastrar produto</h1>
+      <form id="formProduto">
+        <input name="nome" placeholder="Nome do produto" required />
+        <input
+          name="preco"
+          type="number"
+          step="0.01"
+          min="0.01"
+          placeholder="Preço"
+          required
+        />
+        <input
+          name="estoque"
+          type="number"
+          min="0"
+          placeholder="Estoque"
+          required
+        />
+        <button>Salvar produto</button>
+      </form>
+
+      <h2>Produtos</h2>
+      <table id="listaProdutos"></table>
+    </main>
+    <footer class="rodape">
+      Mercado de Hylian · Aberto todos os dias, do amanhecer ao pôr do sol
+    </footer>
+
+    <script>
+      // preenche o endereço pelo CEP (ViaCEP)
+      document.getElementById("cep").addEventListener("input", function () {
+        const cep = this.value.replace(/\D/g, "");
+        if (cep.length != 8) return;
+        fetch(`https://viacep.com.br/ws/${cep}/json/`)
+          .then((r) => r.json())
+          .then((d) => {
+            document.getElementById("endereco").value = d.erro
+              ? "CEP não encontrado"
+              : `${d.logradouro}, ${d.bairro} - ${d.localidade}/${d.uf}`;
+          });
+      });
+
+      // envia os formulários para o PHP
+      function enviar(formId, url, aoTerminar) {
+        document
+          .getElementById(formId)
+          .addEventListener("submit", function (e) {
+            e.preventDefault();
+            fetch(url, { method: "POST", body: new FormData(this) }).then(
+              () => {
+                this.reset();
+                aoTerminar();
+              },
+            );
+          });
+      }
+
+      function listarClientes() {
+        fetch("clientes.php")
+          .then((r) => r.json())
+          .then((lista) => {
+            document.getElementById("listaClientes").innerHTML =
+              "<tr><th>Nome</th><th>E-mail</th><th>CEP</th></tr>" +
+              lista
+                .map(
+                  (c) =>
+                    `<tr><td>${c.nome}</td><td>${c.email}</td><td>${c.cep}</td></tr>`,
+                )
+                .join("");
+          });
+      }
+
+      function listarProdutos() {
+        fetch("produtos.php")
+          .then((r) => r.json())
+          .then((lista) => {
+            document.getElementById("listaProdutos").innerHTML =
+              "<tr><th>Produto</th><th>Preço</th><th>Estoque</th></tr>" +
+              lista
+                .map(
+                  (p) =>
+                    `<tr><td>${p.nome}</td><td>R$ ${p.preco}</td><td>${p.estoque}</td></tr>`,
+                )
+                .join("");
+          });
+      }
+
+      enviar("formCliente", "clientes.php", listarClientes);
+      enviar("formProduto", "produtos.php", listarProdutos);
+      listarClientes();
+      listarProdutos();
+    </script>
+  </body>
+</html>
